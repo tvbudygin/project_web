@@ -1,5 +1,5 @@
-API_KEY_YA = 'AQVN1qaz3lX3MDetmb88RLvhAnYBreMWqy8nQNPI'
-DIRECTORY_ID_YA = "b1g5k6s0ac6rccc53iuk"
+API_KEY_YA = '..'
+DIRECTORY_ID_YA = ".."
 
 
 def gpt(product, wish):
