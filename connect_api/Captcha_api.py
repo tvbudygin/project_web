@@ -1,14 +1,15 @@
+SERVER_KEY = 'ysc2_ribObevsh6D1T4efGfvJlKb0WKhaDLB5N7YCol3y1bd90f01'
+
+
 def check_captcha(token, user_ip):
     import requests
     import json
     import sys
 
-    server_key = 'ysc2_ribObevsh6D1T4efGfvJlKb0WKhaDLB5N7YCol3y1bd90f01'
-
     resp = requests.post(
         "https://smartcaptcha.yandexcloud.net/validate",
         data={
-            "secret": server_key,
+            "secret": SERVER_KEY,
             "token": token,
             "ip": user_ip
         },

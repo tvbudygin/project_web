@@ -1,17 +1,17 @@
-import requests
-import json
-
-api_key_ya = 'AQVN1qaz3lX3MDetmb88RLvhAnYBreMWqy8nQNPI'
-directory_id_ya = "b1g5k6s0ac6rccc53iuk"
+API_KEY_YA = 'AQVN1qaz3lX3MDetmb88RLvhAnYBreMWqy8nQNPI'
+DIRECTORY_ID_YA = "b1g5k6s0ac6rccc53iuk"
 
 
 def gpt(product, wish):
+    import requests
+    import json
+
     auth_headers = {
-        'Authorization': f'Api-Key {api_key_ya}',
+        'Authorization': f'Api-Key {API_KEY_YA}',
     }
     url = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion'
     data = {
-        "modelUri": f'gpt://{directory_id_ya}/yandexgpt-lite',
+        "modelUri": f'gpt://{DIRECTORY_ID_YA}/yandexgpt-lite',
         "completionOptions": {
             "stream": False,
             "temperature": 0.1,
