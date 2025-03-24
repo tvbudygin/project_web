@@ -1,4 +1,5 @@
-SERVER_KEY = '..'
+from project_web.connect_api.env import SERVER_KEY as S
+SERVER_KEY = S  # кину вам в тг ключи
 
 
 def check_captcha(token, user_ip):
@@ -13,7 +14,7 @@ def check_captcha(token, user_ip):
             "token": token,
             "ip": user_ip
         },
-        timeout=1
+        timeout=5
     )
     server_output = resp.content.decode()
     if resp.status_code != 200:
