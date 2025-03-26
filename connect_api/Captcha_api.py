@@ -1,4 +1,5 @@
 from project_web.connect_api.env import SERVER_KEY as S
+# файл в gitingore, поэтому вам нужно создать файл env и закунить туда ключи из тг
 SERVER_KEY = S  # кину вам в тг ключи
 
 

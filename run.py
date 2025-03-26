@@ -3,7 +3,7 @@ from connect_api.Captcha_api import check_captcha
 from connect_api.YandexGPT_api import gpt
 from data.user import User
 from data import db_session
-from forms.login import RegisterForm
+from forms.registration import RegisterForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'timbudygin./././'
