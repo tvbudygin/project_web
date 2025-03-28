@@ -1,0 +1,15 @@
+.answer-box {
+    border: 2px solid #ddd;
+    background-color: #87CEFA;
+    height: 250px;
+    overflow-y: auto;
+}
+.form-box {
+    border: 1px solid #ddd;
+    padding: 50px;
+    background-color: #87CEFA;
+}
+
+.render_button {
+    padding: 40px;
+}
