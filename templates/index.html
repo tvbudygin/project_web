@@ -1,31 +1,16 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% block content %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Основная страница</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}"/>
     <style>
-
         .answer-box {
-            border: 1px solid #ddd;
             padding: {{ pad }};
-            margin-bottom: 20px;
-            background-color: #87CEEB;
-            height: 250px;
-            overflow-y: auto;
             text-align: {{ text }};
-        }
-
-        .form-box {
-            border: 1px solid #ddd;
-            padding: 50px;
-            margin-top: 20px;
-            background-color: #87CEFA;
-        }
-
-        .render_button {
-            padding: 50px;
         }
     </style>
 </head>
@@ -36,18 +21,27 @@
     <div class="row mt-5">
         <div class="col-md-4">
             <div class="answer-box">
-                <label>{{ option1 }}</label>
+                <label>{{ option1|safe }}</label>
             </div>
+            {% if current_user.is_authenticated %}
+            <button type="submit" class="btn btn-bg-white">❤️</button>
+            {% endif %}
         </div>
         <div class="col-md-4">
             <div class="answer-box">
-                <label>{{ option2 }}</label>
+                <label>{{ option2|safe }}</label>
             </div>
+            {% if current_user.is_authenticated %}
+            <button type="submit" class="btn btn-bg-white">❤️</button>
+            {% endif %}
         </div>
         <div class="col-md-4">
             <div class="answer-box">
-                <label>{{ option3 }}</label>
+                <label>{{ option3|safe }}</label>
             </div>
+            {% if current_user.is_authenticated %}
+            <button type="submit" class="btn btn-bg-white">❤️</button>
+            {% endif %}
         </div>
     </div>
 
@@ -77,3 +71,4 @@
 </div>
 </body>
 </html>
+{% endblock %}
