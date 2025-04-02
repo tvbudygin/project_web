@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect
 from connect_api.Captcha_api import check_captcha
 from connect_api.YandexGPT_api import gpt
+from sqlalchemy import or_
 from data.user import User
 from data import db_session
 from forms.registration import RegisterForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.login import LoginForm
+from data.food import Food
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -87,25 +89,89 @@ def main_menu():
     params = {"option1": "1 Вариант Рецепта", "option2": "2 Вариант Рецепта",
               "option3": "3 Вариант Рецепта", "text": "center", "pad": "100px"}
     if request.method == "POST":
-        product = request.form.get("input1")
-        wish = request.form.get("input2")
-        text = gpt(product, wish).split("\n")
-        params = {"text": "left", "pad": "20px"}
-        print(text)
-        text1 = []
-        k = 1
-        for i in text:
-            if i != "":
-                text1.append(i)
-            else:
-                print("\n".join(text1))
-                if k <= 3:
-                    params["option" + str(k)] = "<br>".join(text1)
-                    k += 1
-                text1 = []
-        params["option" + str(k)] = "<br>".join(text1)
-
+        db_sess = db_session.create_session()
+        if "render" in request.form:
+            product = request.form.get("input1")
+            wish = request.form.get("input2")
+            text = gpt(product, wish).split("\n")
+            params = {"text": "left", "pad": "20px"}
+            text1 = []
+            res_his = []
+            k = 1
+            for i in text:
+                if i != "":
+                    text1.append(i)
+                else:
+                    if k <= 3:
+                        params["option" + str(k)] = "<br>".join(text1)
+                        res_his.append(text1[0][:-1])
+                        k += 1
+                    text1 = []
+            params["option" + str(k)] = "<br>".join(text1)
+            res_his.append(text1[0][:-1])
+            food = Food(
+                history=f"{product}; {wish}" if product != "" and wish != "" else f"{product}{wish}",
+                user_id=current_user.id,
+                result_his=", ".join(res_his)
+            )
+            db_sess.add(food)
+            db_sess.commit()
+        if "like" in request.form:
+            like_text = request.form.get("like")
+            if ("1 Вариант Рецепта" != like_text and "2 Вариант Рецепта" != like_text
+                    and "3 Вариант Рецепта" != like_text):
+                params = {"text": "left", "pad": "20px", "option1": request.form.get("option1"),
+                          "option2": request.form.get("option2"), "option3": request.form.get("option3")}
+                food = Food(
+                    like_title=like_text[like_text.find(".") + 2:like_text.find("<br>") - 1],
+                    like=like_text[like_text.find("<br>") + 4:],
+                    user_id=current_user.id
+                )
+                db_sess.add(food)
+                db_sess.commit()
     return render_template('index.html', **params)
+
+
+@app.route('/profile', methods=["GET", "POST"])
+def profile():
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).first()
+    params = {"name": user.name, "email": user.email, "create_data": user.created_date}
+    return render_template("userprofil.html", **params)
+
+
+@app.route("/delete", methods=["GET", "POST"])
+def delete():
+    db_sess = db_session.create_session()
+    food = db_sess.query(Food).filter(Food.user_id == User.id).all()
+    user = db_sess.query(User).first()
+    db_sess.delete(user)
+    for i in food:
+        db_sess.delete(i)
+    db_sess.commit()
+    logout_user()
+    return redirect("/")
+
+
+@app.route("/likes", methods=["GET", "POST"])
+def likes():
+    like = []
+    db_sess = db_session.create_session()
+    food = db_sess.query(Food).filter(Food.user_id == User.id,
+                                      or_(Food.like_title.isnot(None), Food.like.isnot(None))).all()
+    for i in food:
+        like.append([i.like_title, i.like])
+    return render_template("likes.html", quant=len(like), likes=like)
+
+
+@app.route("/history", methods=["GET", "POST"])
+def history():
+    hist = []
+    db_sess = db_session.create_session()
+    food = db_sess.query(Food).filter(Food.user_id == User.id, Food.result_his.isnot(None)).all()
+    for i in food:
+        hist.append([i.history, i.result_his])
+    return render_template("history.html", quant=len(hist), hist=hist)
 
 
 if __name__ == '__main__':

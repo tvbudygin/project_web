@@ -1,10 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}"/>
 </head>
 <body>
+{% if current_user.is_authenticated %}
+<div class="profile-container">
+    <div class="main-profile">
+        <div class="profile-info"><b>Имя:</b> {{ name }}</div>
+        <div class="profile-info"><b>Почта:</b> {{ email }}</div>
+        <div class="profile-info"><b>Дата создания аккаунта:</b> {{ create_data }}</div>
+        <a class="btn btn-danger" href="/delete">Удалить аккаунт</a>
+    </div>
 
+    <div class="his-like">
+        <div class="link"><a class="navbar-brand" href="/likes"><b>Любимые рецепты</b></a></div>
+        <div class="link"><a class="navbar-brand" href="/history"><b>История запросов</b></a></div>
+    </div>
+</div>
+{% else %}
+<div class="reg-log">
+    <p>
+    <a class="btn btn-info" href="/register">Зарегистрироваться</a>
+    <a class="btn btn-success" href="/login">Войти</a>
+</p>
+</div>
+{% endif %}
 </body>
 </html>
+{% endblock %}
