@@ -9,13 +9,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}"/>
 </head>
 <body>
-{% if current_user.is_authenticated %}
 <div class="profile-container">
     <div class="main-profile">
         <div class="profile-info"><b>Имя:</b> {{ name }}</div>
         <div class="profile-info"><b>Почта:</b> {{ email }}</div>
         <div class="profile-info"><b>Дата создания аккаунта:</b> {{ create_data }}</div>
-        <a class="btn btn-danger" href="/delete">Удалить аккаунт</a>
+        <form action="/delete" method="POST">
+            <button type="submit" class="btn btn-danger">Удалить аккаунт</button>
+        </form>
+
     </div>
 
     <div class="his-like">
@@ -23,14 +25,6 @@
         <div class="link"><a class="navbar-brand" href="/history"><b>История запросов</b></a></div>
     </div>
 </div>
-{% else %}
-<div class="reg-log">
-    <p>
-    <a class="btn btn-info" href="/register">Зарегистрироваться</a>
-    <a class="btn btn-success" href="/login">Войти</a>
-</p>
-</div>
-{% endif %}
 </body>
 </html>
 {% endblock %}

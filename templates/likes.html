@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}"/>
 </head>
 <body>
-{% if current_user.is_authenticated %}
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Таблица любимых рецептов</h2>
+    {% if quant > 0 %}
     <table class="table table-bordered table-striped">
         <thead class="table-primary">
         <tr>
@@ -28,15 +28,10 @@
         {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <h5>Пока ничего нет</h5>
+    {% endif %}
 </div>
-{% else %}
-<div class="reg-log">
-    <p>
-        <a class="btn btn-info" href="/register">Зарегистрироваться</a>
-        <a class="btn btn-success" href="/login">Войти</a>
-    </p>
-</div>
-{% endif %}
 </body>
 </html>
 {% endblock %}

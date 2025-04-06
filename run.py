@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, abort, flash
 from connect_api.Captcha_api import check_captcha
 from connect_api.YandexGPT_api import gpt
 from sqlalchemy import or_
@@ -134,17 +134,19 @@ def main_menu():
 
 @app.route('/profile', methods=["GET", "POST"])
 def profile():
+    if not current_user.is_authenticated:
+        return redirect("/login")
     db_sess = db_session.create_session()
-    user = db_sess.query(User).first()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
     params = {"name": user.name, "email": user.email, "create_data": user.created_date}
-    return render_template("userprofil.html", **params)
+    return render_template("profile.html", **params)
 
 
-@app.route("/delete", methods=["GET", "POST"])
+@app.route("/delete", methods=["POST"])
 def delete():
     db_sess = db_session.create_session()
-    food = db_sess.query(Food).filter(Food.user_id == User.id).all()
-    user = db_sess.query(User).first()
+    food = db_sess.query(Food).filter(Food.user_id == current_user.id).all()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
     db_sess.delete(user)
     for i in food:
         db_sess.delete(i)
@@ -153,25 +155,65 @@ def delete():
     return redirect("/")
 
 
+@app.route("/delete/<string:user_email>/<int:num_of_req>", methods=["POST"])
+def delete_user(user_email, num_of_req):
+    if num_of_req > 10:
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == user_email).first()
+        if user:
+            food = db_sess.query(Food).filter(Food.user_id == user.id)
+            for i in food:
+                db_sess.delete(i)
+        db_sess.delete(user)
+        db_sess.commit()
+        return redirect("/history")
+    else:
+        abort(418, "У пользователя должно быть хотя бы 10 запросов")
+
+
 @app.route("/likes", methods=["GET", "POST"])
 def likes():
-    like = []
-    db_sess = db_session.create_session()
-    food = db_sess.query(Food).filter(Food.user_id == User.id,
-                                      or_(Food.like_title.isnot(None), Food.like.isnot(None))).all()
-    for i in food:
-        like.append([i.like_title, i.like])
-    return render_template("likes.html", quant=len(like), likes=like)
+    if not current_user.is_authenticated:
+        return redirect("/login")
+    if current_user:
+        like = []
+        db_sess = db_session.create_session()
+        food = db_sess.query(Food).filter(Food.user_id == current_user.id,
+                                          or_(Food.like_title.isnot(None), Food.like.isnot(None))).all()
+        for i in food:
+            like.append([i.like_title, i.like])
+        return render_template("likes.html", quant=len(like), likes=like)
 
 
 @app.route("/history", methods=["GET", "POST"])
 def history():
+    if not current_user.is_authenticated:
+        return redirect("/login")
     hist = []
     db_sess = db_session.create_session()
-    food = db_sess.query(Food).filter(Food.user_id == User.id, Food.result_his.isnot(None)).all()
+    admins = db_sess.query(User).filter(User.id == current_user.id).first()
+    food = db_sess.query(Food).filter(Food.user_id == current_user.id, Food.result_his.isnot(None)).all()
     for i in food:
         hist.append([i.history, i.result_his])
-    return render_template("history.html", quant=len(hist), hist=hist)
+    params = {"quant": len(hist), "hist": hist}
+    if admins.admin:
+        user_hist = []
+        user_food = db_sess.query(Food).filter(Food.user_id == User.id,
+                                               Food.like == None, Food.like_title == None).all()
+        for i in user_food:
+            name_user = db_sess.query(User).filter(User.id == i.user_id).first()
+            done_user = False
+            for e in user_hist:
+                if name_user.email in e:
+                    done_user = True
+                    e[1] += 1
+                    break
+            if not done_user and name_user.email != current_user.email:
+                user_hist.append([name_user.email, 1])
+        params["user_quant"] = len(user_hist)
+        params["user_hist"] = user_hist
+        params["admin"] = True
+    return render_template("history.html", **params)
 
 
 if __name__ == '__main__':
