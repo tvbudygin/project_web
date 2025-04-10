@@ -12,7 +12,7 @@ class DataBase:
                                                self.Food.result_his.isnot(None)).all()
         for i in food:
             hist.append([i.history, i.result_his])
-        params = {"quant": len(hist), "hist": hist}
+        params = {"quant": len(hist), "hist": hist[::-1]}
         if admins.admin:
             user_hist = []
             user_food = db_sess.query(self.Food).filter(self.Food.user_id == self.User.id,
@@ -26,7 +26,7 @@ class DataBase:
                         e[1] += 1
                         break
                 if not done_user and name_user.email != current_user.email:
-                    user_hist.append([name_user.email, 1])
+                    user_hist.append([name_user.email, 1, name_user.created_date])
             params["user_quant"] = len(user_hist)
             params["user_hist"] = user_hist
             params["admin"] = True
@@ -67,7 +67,8 @@ class DataBase:
         user = db_sess.query(self.User).filter(self.User.id == current_user.id).first()
         params = {"name": user.name,
                   "email": user.email,
-                  "create_data": user.created_date}
+                  "create_data": user.created_date,
+                  "admin": "Да" if user.admin else "Нет"}
         return params
 
     def db_main_btn_render(self, current_user, product, wish, gpt):

@@ -13,6 +13,7 @@
     <div class="main-profile">
         <div class="profile-info"><b>Имя:</b> {{ name }}</div>
         <div class="profile-info"><b>Почта:</b> {{ email }}</div>
+        <div class="profile-info"><b>Админ:</b> {{ admin }}</div>
         <div class="profile-info"><b>Дата создания аккаунта:</b> {{ create_data }}</div>
         <form action="/delete" method="POST">
             <button type="submit" class="btn btn-danger">Удалить аккаунт</button>

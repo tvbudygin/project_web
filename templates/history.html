@@ -40,6 +40,7 @@
             <tr>
                 <th>Пользователь</th>
                 <th>Количество запросов</th>
+                <th>Дата создания аккаунта</th>
                 <th>Забанить и удалить аккаунт</th>
             </tr>
             </thead>
@@ -48,6 +49,7 @@
             <tr>
                 <td>{{ user_hist[i][0] }}</td>
                 <td>{{ user_hist[i][1] }}</td>
+                <td>{{ user_hist[i][2] }}</td>
                 <td>
                     <form action="/delete/{{ user_hist[i][0] }}/{{ user_hist[i][1] }}" method="POST">
                         <button type="submit" class="btn btn-danger">Удалить аккаунт</button>
