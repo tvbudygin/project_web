@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, abort
+from flask import render_template, request, redirect, abort
 from project_web.connect_api.YandexGPT_api import gpt
 from .user import User
 from . import db_session
@@ -33,18 +33,23 @@ def logout():
 @blueprint.route('/', methods=["GET", "POST"])
 @blueprint.route('/main', methods=["GET", "POST"])
 def main_menu():
-    params = {"option1": "1 Вариант Рецепта", "option2": "2 Вариант Рецепта",
-              "option3": "3 Вариант Рецепта", "text": "center", "pad": "100px"}
+    params = {"option1": "1 Вариант Рецепта",
+              "option2": "2 Вариант Рецепта",
+              "option3": "3 Вариант Рецепта",
+              "text": "center", "pad": "100px"}
+
     if request.method == "POST":
         if "render" in request.form:
             product = request.form.get("input1")
             wish = request.form.get("input2")
             params = db.db_main_btn_render(current_user, product, wish, gpt)
+
         if "like" in request.form:
             try_params = db.db_main_btn_like(request, current_user)
             if try_params:
                 params = try_params
-    return render_template('index.html', **params)
+    return render_template('index.html',
+                           **params)
 
 
 @blueprint.route('/profile', methods=["GET", "POST"])
@@ -52,7 +57,8 @@ def profile():
     if not current_user.is_authenticated:
         return redirect("/login")
     params = db.db_profile(current_user)
-    return render_template("profile.html", **params)
+    return render_template("profile.html",
+                           **params)
 
 
 @blueprint.route("/delete", methods=["POST"])
@@ -76,7 +82,9 @@ def likes():
     if not current_user.is_authenticated:
         return redirect("/login")
     like = db.db_likes(current_user)
-    return render_template("likes.html", quant=len(like), likes=like)
+    return render_template("likes.html",
+                           quant=len(like),
+                           likes=like)
 
 
 @blueprint.route("/history", methods=["GET", "POST"])
@@ -84,4 +92,5 @@ def history():
     if not current_user.is_authenticated:
         return redirect("/login")
     params = db.db_history(current_user)
-    return render_template("history.html", **params)
+    return render_template("history.html",
+                           **params)
