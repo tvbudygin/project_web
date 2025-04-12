@@ -1,6 +1,6 @@
-from project_web.connect_api.env import API_KEY_YA as A
-# файл в gitingore, поэтому вам нужно создать файл env и закунить туда ключи из тг
-from project_web.connect_api.env import DIRECTORY_ID_YA as D
+from project_web.connect_api.config import API_KEY_YA as A
+# файл в gitingore, поэтому вам нужно создать файл config.py и закунить туда ключи из тг
+from project_web.connect_api.config import DIRECTORY_ID_YA as D
 
 API_KEY_YA = A  # кину вам в тг ключи
 DIRECTORY_ID_YA = D  # кину вам в тг ключи
