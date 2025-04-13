@@ -5,7 +5,7 @@
     overflow-y: auto;
 }
 .form-box {
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     padding: 50px;
     background-color: #87CEFA;
 }

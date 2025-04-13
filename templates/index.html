@@ -18,34 +18,37 @@
 
 <div class="container mt-5">
     <h1>Генерация рецептов</h1>
-    <div class="row mt-5">
-        <div class="col-md-4">
-            <div class="answer-box">
-                <label>{{ option1|safe }}</label>
-            </div>
-            {% if current_user.is_authenticated %}
-            <button type="submit" class="btn btn-bg-white">❤️</button>
-            {% endif %}
-        </div>
-        <div class="col-md-4">
-            <div class="answer-box">
-                <label>{{ option2|safe }}</label>
-            </div>
-            {% if current_user.is_authenticated %}
-            <button type="submit" class="btn btn-bg-white">❤️</button>
-            {% endif %}
-        </div>
-        <div class="col-md-4">
-            <div class="answer-box">
-                <label>{{ option3|safe }}</label>
-            </div>
-            {% if current_user.is_authenticated %}
-            <button type="submit" class="btn btn-bg-white">❤️</button>
-            {% endif %}
-        </div>
-    </div>
-
     <form method="POST">
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="answer-box">
+                    <label>{{ option1|safe }}</label>
+                </div>
+                {% if current_user.is_authenticated %}
+                <button type="submit" name="like" value="{{ option1 }}" class="btn btn-bg-white">❤️</button>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <div class="answer-box">
+                    <label>{{ option2|safe }}</label>
+                </div>
+                {% if current_user.is_authenticated %}
+                <button type="submit" name="like" value="{{ option2 }}" class="btn btn-bg-white">❤️</button>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <div class="answer-box">
+                    <label>{{ option3|safe }}</label>
+                </div>
+                {% if current_user.is_authenticated %}
+                <button type="submit" name="like" value="{{ option3 }}" class="btn btn-bg-white">❤️</button>
+                {% endif %}
+            </div>
+        </div>
+        <input type="hidden" name="option1" value="{{ option1 }}">
+        <input type="hidden" name="option2" value="{{ option2 }}">
+        <input type="hidden" name="option3" value="{{ option3 }}">
+
         <div class="row mt-5">
             <div class="col-md-6">
                 <div class="form-box">
@@ -63,7 +66,7 @@
             </div>
             <div>
                 <div class="render_button">
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Сгенерировать рецепт</button>
+                    <button type="submit" name="render" class="btn btn-primary w-100 mt-3">Сгенерировать рецепт</button>
                 </div>
             </div>
         </div>
