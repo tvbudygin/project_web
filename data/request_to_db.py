@@ -102,14 +102,14 @@ class DataBase:
                 text1 = []
         params["option" + str(k)] = "<br>".join(text1)
         res_his.append(text1[0][:-1])
-
-        food = self.Food(
-            history=f"{product}; {wish}" if product != "" and wish != "" else f"{product}{wish}",
-            user_id=current_user.id,
-            result_his=", ".join(res_his)
-        )
-        db_sess.add(food)
-        db_sess.commit()
+        if current_user.is_authenticated:
+            food = self.Food(
+                history=f"{product}; {wish}" if product != "" and wish != "" else f"{product}{wish}",
+                user_id=current_user.id,
+                result_his=", ".join(res_his)
+            )
+            db_sess.add(food)
+            db_sess.commit()
         return params
 
     # сохранение любимого рецепта пользователя или администратора (при нажатии кнопки лайк)
