@@ -4,6 +4,8 @@ class DataBase:
         self.Food = Food
         self.db_session = db_session
 
+    # запрос в бд для получения истории запросов пользователем или
+    # администратором(собственные запросы и количество запросов каждого пользователя)
     def db_history(self, current_user):
         hist = []
         db_sess = self.db_session.create_session()
@@ -35,6 +37,7 @@ class DataBase:
             params["admin"] = True
         return params
 
+    # получение данных о любимых рецептах пользователя или администратора
     def db_likes(self, current_user):
         from sqlalchemy import or_
 
@@ -46,6 +49,7 @@ class DataBase:
             like.append([i.like_title, i.like])
         return like[::-1]
 
+    # удаление аккаунта пользователя
     def db_delete_user(self, user_email):
         db_sess = self.db_session.create_session()
         user = db_sess.query(self.User).filter(self.User.email == user_email).first()
@@ -56,6 +60,7 @@ class DataBase:
         db_sess.delete(user)
         db_sess.commit()
 
+    # удаление своего аккаунта
     def db_delete_yourself(self, current_user):
         db_sess = self.db_session.create_session()
         food = db_sess.query(self.Food).filter(self.Food.user_id == current_user.id).all()
@@ -66,6 +71,7 @@ class DataBase:
             db_sess.delete(i)
         db_sess.commit()
 
+    # получения данных для профиля пользователя или администратора
     def db_profile(self, current_user):
         db_sess = self.db_session.create_session()
         user = db_sess.query(self.User).filter(self.User.id == current_user.id).first()
@@ -75,6 +81,7 @@ class DataBase:
                   "admin": "Да" if user.admin else "Нет"}
         return params
 
+    # сохранение истории поиска пользователя или администратора в бд(при нажатии кнопки "Сгенерировать рецепт")
     def db_main_btn_render(self, current_user, product, wish, gpt):
         db_sess = self.db_session.create_session()
         text = gpt(product, wish).split("\n")
@@ -95,16 +102,17 @@ class DataBase:
                 text1 = []
         params["option" + str(k)] = "<br>".join(text1)
         res_his.append(text1[0][:-1])
-
-        food = self.Food(
-            history=f"{product}; {wish}" if product != "" and wish != "" else f"{product}{wish}",
-            user_id=current_user.id,
-            result_his=", ".join(res_his)
-        )
-        db_sess.add(food)
-        db_sess.commit()
+        if current_user.is_authenticated:
+            food = self.Food(
+                history=f"{product}; {wish}" if product != "" and wish != "" else f"{product}{wish}",
+                user_id=current_user.id,
+                result_his=", ".join(res_his)
+            )
+            db_sess.add(food)
+            db_sess.commit()
         return params
 
+    # сохранение любимого рецепта пользователя или администратора (при нажатии кнопки лайк)
     def db_main_btn_like(self, request, current_user):
         db_sess = self.db_session.create_session()
         like_text = request.form.get("like")

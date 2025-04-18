@@ -2,6 +2,7 @@ from data import db_session
 from data import reg_log, main_prof_like_hist
 from data.app import app
 
+# подключаем blueprint, создаем бд, запускаем весь проект
 if __name__ == "__main__":
     app.register_blueprint(reg_log.blueprint)
     app.register_blueprint(main_prof_like_hist.blueprint)

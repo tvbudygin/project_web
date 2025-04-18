@@ -1,11 +1,11 @@
 from flask import render_template, request, redirect
-from project_web.connect_api.Captcha_api import check_captcha
+from connect_api.Captcha_api import check_captcha
 import flask
 from .user import User
-from project_web.forms.registration import RegisterForm
+from forms.registration import RegisterForm
 from flask_login import login_user
 from . import db_session
-from project_web.forms.login import LoginForm
+from forms.login import LoginForm
 
 blueprint = flask.Blueprint(
     'reg_log',
@@ -14,6 +14,7 @@ blueprint = flask.Blueprint(
 )
 
 
+# обработка страницы регистрации, проверка капчи
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -54,6 +55,7 @@ def register():
                            title='Регистрация')
 
 
+# обработка страницы логина, проверка капчи
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
