@@ -14,6 +14,7 @@ blueprint = flask.Blueprint(
 )
 
 
+# обработка страницы регистрации, проверка капчи
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -54,6 +55,7 @@ def register():
                            title='Регистрация')
 
 
+# обработка страницы логина, проверка капчи
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()

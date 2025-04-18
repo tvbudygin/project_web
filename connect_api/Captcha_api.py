@@ -3,6 +3,7 @@ from project_web.data.config import SERVER_KEY as S
 SERVER_KEY = S  # кину вам в тг ключи
 
 
+# проверка капчи на сервере яндекса
 def check_captcha(token, user_ip):
     import requests
     import json

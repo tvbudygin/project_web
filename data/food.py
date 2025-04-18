@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
+# создание таблицы food в бд
 class Food(SqlAlchemyBase):
     __tablename__ = "food"
 
