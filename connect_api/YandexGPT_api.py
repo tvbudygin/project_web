@@ -1,6 +1,6 @@
-from project_web.data.config import API_KEY_YA as A
+from data.config import API_KEY_YA as A
 # файл в gitingore, поэтому вам нужно создать файл config.py(как config_example.py) и закунить туда ключи из тг
-from project_web.data.config import DIRECTORY_ID_YA as D
+from data.config import DIRECTORY_ID_YA as D
 
 API_KEY_YA = A  # кину вам в тг ключи
 DIRECTORY_ID_YA = D  # кину вам в тг ключи

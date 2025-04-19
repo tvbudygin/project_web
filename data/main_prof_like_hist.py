@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, abort
-from project_web.connect_api.YandexGPT_api import gpt
+from connect_api.YandexGPT_api import gpt
 from .user import User
 from . import db_session
 from flask_login import login_required, logout_user, current_user
