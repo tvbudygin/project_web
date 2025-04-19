@@ -44,4 +44,4 @@
   ![Основная страница](materials/history_admin.png)
 
 ### 5. Скринкаст
-![Скринкаст](позже будет)
+![Скринкаст](https://rutube.ru/video/private/122b14e5bc22ec9fbbba4d1a4a48466b/?p=6idM4AxSojnfr7Ag3uXaEA)

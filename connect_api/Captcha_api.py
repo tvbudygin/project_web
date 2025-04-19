@@ -1,4 +1,4 @@
-from data.config import SERVER_KEY as S
+from project_web.data.config import SERVER_KEY as S
 # файл в gitingore, поэтому вам нужно создать файл config.py(как config_example.py) и закунить туда ключи из тг
 SERVER_KEY = S  # кину вам в тг ключи
 
